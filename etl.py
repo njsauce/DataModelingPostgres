@@ -4,6 +4,16 @@ import psycopg2
 import pandas as pd
 from sql_queries import *
 
+"""
+
+This function processes the song file so that we can insert the data into the songs and artists tables. We first read the song files, 
+then we insert the data into the songs table and finally we insert the data into the artists tables.
+
+INPUTS:
+* cur - cursor variable
+* filepath - path for the song file we are reading and pulling in
+
+"""
 
 def process_song_file(cur, filepath):
     # open song file
@@ -14,13 +24,25 @@ def process_song_file(cur, filepath):
     song_data = song_data.values[0]
     song_data.tolist()
     cur.execute(song_table_insert, song_data)
-    
+
+
     # insert artist record
     artist_data = df[['artist_id', 'artist_name', 'artist_location', 'artist_latitude', 'artist_longitude']]
+    artist_data = artist_data.rename({'artist_name': 'name', 'artist_location': 'location', 'artist_latitude': 'latitude', 'artist_longitude': 'longitude'})
     artist_data = artist_data.values[0]
     artist_data.tolist()
     cur.execute(artist_table_insert, artist_data)
 
+"""
+
+This function processes the log file so that we can insert the data into the time, users and songplays tables. We first read the log files, 
+then we insert the data into the times table, next the users table and finally we insert the data into the songplays tables.
+
+INPUTS:
+* cur - cursor variable
+* filepath - path for the log file we are reading and pulling in
+
+"""
 
 def process_log_file(cur, filepath):
     # open log file
@@ -43,6 +65,7 @@ def process_log_file(cur, filepath):
 
     # load user table
     user_df = df[['userId', 'firstName', 'lastName', 'gender', 'level']]
+    user_df = user_df.rename({'userId': 'user_id', 'firstName': 'first_name', 'lastName': 'last_name'})
 
     # insert user records
     for i, row in user_df.iterrows():
@@ -64,6 +87,18 @@ def process_log_file(cur, filepath):
         songplay_data = (pd.to_datetime(row.ts, unit = 'ms'), row.userId, row.level, songid, artistid, row.sessionId, row.location, row.userAgent)
         cur.execute(songplay_table_insert, songplay_data)
 
+"""
+
+Here we execute the functions we established above to connect to the database, process the song and log file 
+and inset the data into our tables before disconnection from the database.
+
+INPUTS:
+* cur - cursor variable
+* conn - connects to the database
+* filepath - path for the song file we are reading and pulling in
+* func - establishes either the process song file function or the process log file function we created earlier
+
+"""
 
 def process_data(cur, conn, filepath, func):
     # get all files matching extension from directory
