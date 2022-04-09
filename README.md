@@ -18,5 +18,13 @@ The purpose of this database was to enable the analytics team at Sparkify to gai
 </ul>
 
 <h6>Design Justification</h6>
-The objective given to us by Sparkify was to create a database that optimizes queries for their analytics team. With this in mind, we went with a star schema approach with separate fact and dimension tables to avoid duplicating data in our tables. This design will allow for quick and easy queries from the analytics team where they can derive business insights. 
+The objective given to us by Sparkify was to create a database that optimizes queries for their analytics team. With this in mind, we went with a Star schema approach with separate fact and dimension tables to avoid duplicating data in our tables. This design will allow for quick and easy queries from the analytics team where they can derive business insights. 
+
+<ul>
+  <li>*songplays table* - This table is our fact table. User session information is stored here to identify when a user signed in and what activity they did.</li>
+  <li>*users table* - This table is a dimensions table. User identity information is stored here.</li>
+  <li>*songs table* - This table is a dimension table. Song identity information is stored here.</li>
+  <li>*artists table* - This table is a dimension table. Artist identity information is stored here.</li>
+  <li>*time table* - This table is a dimension table.</li>
+</ul>
 
